@@ -109,6 +109,15 @@ public:
 
 
             // TODO implement linear weighting deposit for the density and flux
+
+            m_density(iCell) += particle.weight * (1.0 - reminder);
+            m_density(iCell + 1) += particle.weight * reminder;
+            m_flux.x(iCell) += particle.weight*particle.v[0] * (1.0 - reminder); 
+            m_flux.x(iCell + 1) += particle.weight*particle.v[0] * reminder;
+            m_flux.y(iCell) += particle.weight*particle.v[1] * (1.0 - reminder); 
+            m_flux.y(iCell + 1) += particle.weight*particle.v[1] * reminder;
+            m_flux.z(iCell) += particle.weight*particle.v[2] * (1.0 - reminder); 
+            m_flux.z(iCell + 1) += particle.weight*particle.v[2] * reminder;
         }
     }
 
