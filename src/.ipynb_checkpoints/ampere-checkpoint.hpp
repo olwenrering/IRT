@@ -37,8 +37,8 @@ public:
                 auto& Jz = J.z;
 
                 Jx(ix) = 0.0;
-                Jy(ix) = - (Bz(ix + 1)- Bz(ix - 1))/(2*dx);
-                Jz(ix) = (By(ix + 1)- By(ix - 1))/(2*dx);
+                Jy(ix) = - (Bz(ix + 1)- Bz(ix))/(dx);
+                Jz(ix) = (By(ix + 1)- By(ix))/(dx);
             }
         }
         else

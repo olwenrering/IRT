@@ -31,7 +31,7 @@ public:
             // TODO your code here
             // By, Bz are dual
             for (auto ix = m_grid->dual_dom_start(Direction::X);
-                 ix + 1 <= m_grid->dual_dom_end(Direction::X); ++ix)
+                 ix <= m_grid->dual_dom_end(Direction::X); ++ix)
             {
                 auto const& Ex = E.x;
                 auto const& Ey = E.y;
