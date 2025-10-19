@@ -29,11 +29,11 @@ public:
         if constexpr (dimension == 1)
         {
             // TODO your code here
-            for (auto ix = m_grid->dual_dom_start(Direction::X);
-                 ix <= m_grid->dual_dom_end(Direction::X); ++ix)
+            for (auto ix = m_grid->primal_dom_start(Direction::X);
+                 ix <= m_grid->primal_dom_end(Direction::X); ++ix)
             {
                 auto& Bx = Bnew.x;
-                Bx(ix) = 0.;
+                Bx(ix) = B.x(ix);
             }
             // By, Bz are dual
             for (auto ix = m_grid->dual_dom_start(Direction::X);
@@ -48,8 +48,8 @@ public:
                 auto& Bz = Bnew.z;
 
                 
-                By(ix) = B.y(ix) + (Ez(ix) - Ez(ix - 1))*m_dt/dx; 
-                Bz(ix) = B.z(ix) - (Ey(ix) - Ey(ix - 1))*m_dt/dx;
+                By(ix) = B.y(ix) + (Ez(ix + 1) - Ez(ix))*m_dt/dx; 
+                Bz(ix) = B.z(ix) - (Ey(ix + 1) - Ey(ix))*m_dt/dx;
             }
         }
         else

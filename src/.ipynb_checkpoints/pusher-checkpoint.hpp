@@ -91,13 +91,6 @@ public:
             double const Lx = this->layout_->nbr_cells(Direction::X) *
                   this->layout_->cell_size(Direction::X);
 
-            auto wrap = [Lx](double x) {
-                    // robust periodic wrap
-                    x = std::fmod(x, Lx);
-                    if (x < 0.0) x += Lx;
-                    return x;
-                };
-
             double Ex = interpolate(E.x, iCell, reminder);
             double Ey = interpolate(E.y, iCell, reminder);
             double Ez = interpolate(E.z, iCell, reminder);
@@ -129,8 +122,7 @@ public:
             vy = vy_plus + particle.charge*this->dt_*Ey/(2*particle.mass);
             vz = vz_plus + particle.charge*this->dt_*Ez/(2*particle.mass);
 
-            x = wrap(x_half + vx*this->dt_/2);
-            //x = x_half + vx*this->dt_/2;
+            x = x_half + vx*this->dt_/2;
 
             particle.position[0] = x;
             particle.v[0] = vx;

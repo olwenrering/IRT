@@ -161,37 +161,7 @@ int main()
 
         // TODO implement ICN temporal integration
 
-        // Prediction 1 & 2
-
-        for (int i=0; i<2; ++i)
-            {
-                faraday(E, B, Bnew);
-                boundary_condition->fill(Bnew);
-
-                ampere(Bnew, J);
-                boundary_condition->fill(J);
-                
-                ohm(Bnew, J, N, V, Enew);
-                boundary_condition->fill(Enew);
-                
-                average(E, Enew, Eavg);
-                average(B, Bnew, Bavg);
-
-                for (auto& pop : populations)
-                    {
-                        push(pop.particles(), Eavg, Bavg);
-                        pop.deposit();
-                        boundary_condition->fill(pop.flux());
-                        boundary_condition->fill(pop.density());
-                    }
-                total_density(populations, N);
-                bulk_velocity<dimension>(populations, N, V);
-                
-                E = Eavg;
-                //B = Bavg;
-            }
-
-        // Correction 
+        // Prediction 1 
 
         faraday(E, B, Bnew);
         boundary_condition->fill(Bnew);
@@ -201,6 +171,59 @@ int main()
         
         ohm(Bnew, J, N, V, Enew);
         boundary_condition->fill(Enew);
+        
+        average(E, Enew, Eavg);
+        average(B, Bnew, Bavg);
+
+        for (auto& pop : populations)
+            {
+                push(pop.particles(), Eavg, Bavg);
+                boundary_condition->particles(pop.particles());
+                pop.deposit();
+                boundary_condition->fill(pop.flux());
+                boundary_condition->fill(pop.density());
+            }
+        total_density(populations, N);
+        bulk_velocity<dimension>(populations, N, V);
+
+        // Prediction 2
+
+        faraday(Eavg, B, Bnew);
+        boundary_condition->fill(Bnew);
+
+        ampere(Bnew, J);
+        boundary_condition->fill(J);
+        
+        ohm(Bnew, J, N, V, Enew);
+        boundary_condition->fill(Enew);
+        
+        average(E, Enew, Eavg);
+        average(B, Bnew, Bavg);
+
+        for (auto& pop : populations)
+            {
+                push(pop.particles(), Eavg, Bavg);
+                boundary_condition->particles(pop.particles());
+                pop.deposit();
+                boundary_condition->fill(pop.flux());
+                boundary_condition->fill(pop.density());
+            }
+        total_density(populations, N);
+        bulk_velocity<dimension>(populations, N, V);
+
+        // Correction 
+
+        faraday(Eavg, B, Bnew);
+        boundary_condition->fill(Bnew);
+
+        ampere(Bnew, J);
+        boundary_condition->fill(J);
+        
+        ohm(Bnew, J, N, V, Enew);
+        boundary_condition->fill(Enew);
+
+        B = Bnew;
+        E = Enew;
         
         time += dt;
         diags_write_fields(B, E, V, N, time);
