@@ -130,6 +130,7 @@ public:
             vz = vz_plus + particle.charge*this->dt_*Ez/(2*particle.mass);
 
             x = wrap(x_half + vx*this->dt_/2);
+            //x = x_half + vx*this->dt_/2;
 
             particle.position[0] = x;
             particle.v[0] = vx;

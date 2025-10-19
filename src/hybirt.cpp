@@ -167,10 +167,16 @@ int main()
             {
                 faraday(E, B, Bnew);
                 boundary_condition->fill(Bnew);
+
+                ampere(Bnew, J);
+                boundary_condition->fill(J);
+                
                 ohm(Bnew, J, N, V, Enew);
                 boundary_condition->fill(Enew);
+                
                 average(E, Enew, Eavg);
                 average(B, Bnew, Bavg);
+
                 for (auto& pop : populations)
                     {
                         push(pop.particles(), Eavg, Bavg);
@@ -180,21 +186,21 @@ int main()
                     }
                 total_density(populations, N);
                 bulk_velocity<dimension>(populations, N, V);
-                ampere(Bnew, J);
-                boundary_condition->fill(J);
-                E = Enew;
-                B = Bnew;
+                
+                E = Eavg;
+                //B = Bavg;
             }
 
         // Correction 
 
         faraday(E, B, Bnew);
         boundary_condition->fill(Bnew);
+
+        ampere(Bnew, J);
+        boundary_condition->fill(J);
+        
         ohm(Bnew, J, N, V, Enew);
         boundary_condition->fill(Enew);
-
-        B = Bnew;
-        E = Enew;
         
         time += dt;
         diags_write_fields(B, E, V, N, time);

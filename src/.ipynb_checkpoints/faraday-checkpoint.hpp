@@ -29,6 +29,12 @@ public:
         if constexpr (dimension == 1)
         {
             // TODO your code here
+            for (auto ix = m_grid->dual_dom_start(Direction::X);
+                 ix <= m_grid->dual_dom_end(Direction::X); ++ix)
+            {
+                auto& Bx = Bnew.x;
+                Bx(ix) = 0.;
+            }
             // By, Bz are dual
             for (auto ix = m_grid->dual_dom_start(Direction::X);
                  ix <= m_grid->dual_dom_end(Direction::X); ++ix)
@@ -37,11 +43,11 @@ public:
                 auto const& Ey = E.y;
                 auto const& Ez = E.z;
 
-                auto& Bx = Bnew.x;
+                
                 auto& By = Bnew.y;
                 auto& Bz = Bnew.z;
 
-                Bx(ix) = 0.;
+                
                 By(ix) = B.y(ix) + (Ez(ix) - Ez(ix - 1))*m_dt/dx; 
                 Bz(ix) = B.z(ix) - (Ey(ix) - Ey(ix - 1))*m_dt/dx;
             }

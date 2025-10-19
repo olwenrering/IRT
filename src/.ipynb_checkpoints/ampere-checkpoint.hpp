@@ -24,19 +24,25 @@ public:
         if constexpr (dimension == 1)
         {
             // TODO your code here
+            for (auto ix = m_grid->primal_dom_start(Direction::X);
+                 ix + 1<= m_grid->primal_dom_end(Direction::X); ++ix)
+            {
+                auto& Jx = J.x;
+                Jx(ix) = 0.0;
+            }
             // Jy, Jz are primal
             for (auto ix = m_grid->primal_dom_start(Direction::X);
-                 ix + 1 <= m_grid->primal_dom_end(Direction::X); ++ix)
+                 ix + 1<= m_grid->primal_dom_end(Direction::X); ++ix)
             {
                 auto const& Bx = B.x;
                 auto const& By = B.y;
                 auto const& Bz = B.z;
 
-                auto& Jx = J.x;
+                
                 auto& Jy = J.y;
                 auto& Jz = J.z;
 
-                Jx(ix) = 0.0;
+                
                 Jy(ix) = - (Bz(ix + 1)- Bz(ix))/(dx);
                 Jz(ix) = (By(ix + 1)- By(ix))/(dx);
             }
